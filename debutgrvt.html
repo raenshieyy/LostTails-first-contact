@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LostTails.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="Lost Tails.png" type="image/png">
+
+<style>
+html{
+    scroll-behavior:smooth;
+}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Orbitron',sans-serif;
+    background:#03060b;
+    overflow-x:scroll;
+    overflow-y:hidden;
+    color:white;
+}
+
+
+.background{
+    position:fixed;
+    inset:0;
+
+    background:
+    radial-gradient(circle at center, rgba(0,255,255,.08), transparent 40%),
+    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px),
+    #03060b;
+
+    background-size:
+    100% 100%,
+    60px 60px,
+    60px 60px;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    background:
+    linear-gradient(
+        to right,
+        rgba(0,0,0,.95),
+        rgba(0,0,0,.45),
+        rgba(0,0,0,.95)
+    );
+}
+.vignette{
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+    radial-gradient(
+        circle,
+        transparent 45%,
+        rgba(0,0,0,.35) 75%,
+        rgba(0,0,0,.75) 100%
+    );
+
+    z-index:9998;
+}
+
+.screen{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    pointer-events:none;
+    transition:.7s;
+}
+
+.screen.active{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.opening-container{
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:80px;
+}
+
+
+
+.left-panel{
+    width:420px;
+}
+
+.game-title{
+    font-size:72px;
+    font-weight:800;
+    line-height:1;
+    letter-spacing:5px;
+
+    margin-bottom:18px;
+}
+
+.subtitle{
+    font-size:12px;
+    letter-spacing:6px;
+    color:#7d8792;
+
+    margin-bottom:70px;
+}
+
+
+.menu{
+    list-style:none;
+}
+
+.menu li{
+    position:relative;
+
+    width:max-content;
+
+    margin:22px 0;
+
+    font-size:15px;
+    letter-spacing:3px;
+
+    color:#cdd7e2;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.menu li::before{
+    content:'';
+
+    position:absolute;
+
+    left:-18px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#00eaff;
+
+    opacity:0;
+
+    transition:.3s;
+}
+
+.menu li:hover{
+    color:#00f0ff;
+    transform:translateX(8px);
+    text-shadow:0 0 10px #00f0ff;
+}
+
+.menu li:hover::before{
+    opacity:1;
+}
+
+
+.lab{
+    position:relative;
+
+    width:650px;
+    height:320px;
+
+    border:1px solid rgba(0,255,255,.15);
+
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(0,255,255,.04),
+        rgba(255,255,255,.01)
+    );
+
+    overflow:hidden;
+
+    box-shadow:
+    0 0 40px rgba(0,255,255,.08),
+    inset 0 0 30px rgba(255,255,255,.02);
+}
+
+.tube{
+    position:absolute;
+
+    left:230px;
+    bottom:0;
+
+    width:70px;
+    height:280px;
+
+    border:2px solid rgba(0,255,255,.35);
+
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(0,255,255,.2),
+        rgba(0,255,255,.03)
+    );
+
+    box-shadow:
+    0 0 25px rgba(0,255,255,.3);
+}
+
+.monitor{
+    position:absolute;
+
+    right:80px;
+    top:70px;
+
+    width:190px;
+    height:100px;
+
+    border:2px solid rgba(0,255,255,.35);
+
+    background:rgba(0,255,255,.08);
+
+    box-shadow:0 0 20px rgba(0,255,255,.25);
+}
+
+.monitor::before{
+    content:'GRAVT-404';
+
+    position:absolute;
+    top:40px;
+
+    width:100%;
+
+    text-align:center;
+
+    font-size:14px;
+    letter-spacing:2px;
+
+    color:#9ff;
+}
+
+
+.character-screen{
+    width:100%;
+    height:100vh;
+
+    padding:40px 60px;
+}
+
+.char-top{
+    margin-bottom:30px;
+}
+
+.char-title{
+    font-size:52px;
+    letter-spacing:4px;
+    font-weight:700;
+}
+
+.char-sub{
+    margin-top:10px;
+
+    color:#7e8b9a;
+
+    font-size:12px;
+    letter-spacing:5px;
+}
+
+.character-grid{
+    display:flex;
+    justify-content:center;
+    gap:28px;
+
+    margin-top:40px;
+}
+
+
+.card{
+    position:relative;
+
+    width:260px;
+    height:520px;
+
+    border:1px solid rgba(0,255,255,.15);
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(0,255,255,.04),
+        rgba(255,255,255,.02)
+    );
+
+    transition:.4s;
+
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+    border-color:rgba(0,255,255,.45);
+    box-shadow:0 0 30px rgba(0,255,255,.12);
+}
+
+.character-image{
+    position:absolute;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+.fade{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,.96), transparent);
+}
+
+.info{
+    position:absolute;
+    left:24px;
+    right:24px;
+    bottom:40px;
+}
+
+.name{
+    font-size:28px;
+    letter-spacing:3px;
+}
+
+.role{
+    font-size:11px;
+    color:#8fa3b7;
+}
+
+.stat{
+    margin-top:12px;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:#8fa3b7;
+}
+
+.bar{
+    width:100%;
+    height:6px;
+    background:rgba(255,255,255,.05);
+}
+
+.fill{
+    height:100%;
+    background:#00f0ff;
+}
+
+.select-btn{
+    margin-top:20px;
+    width:100%;
+    padding:12px;
+    border:1px solid rgba(0,255,255,.2);
+    background:rgba(0,255,255,.05);
+    color:#9ff;
+    cursor:pointer;
+    font-family:'Orbitron',sans-serif;
+    letter-spacing:2px;
+    transition:.3s;
+}
+
+.select-btn:hover{
+    background:rgba(0,255,255,.15);
+    border-color:rgba(0,255,255,.5);
+    box-shadow:0 0 15px rgba(0,255,255,.2);
+    color:#00f0ff;
+}
+
+
+.loading-container{
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.loading-spinner{
+    width:100px;
+}
+
+
+#world{
+    position:relative;
+    width:5000px;
+    height:100vh;
+}
+.corridor-wrapper{
+    position:absolute;
+
+    top:50%;
+    left:0;
+
+    transform:translateY(-50%);
+
+    display:flex;
+
+    width:max-content;
+    height:400px;
+
+}
+.corridor-bg{
+    position:absolute;
+
+    left:0;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:5000px;
+    height:400px;
+
+    object-fit:cover;
+
+    image-rendering:pixelated;
+}
+@keyframes scrollCorridor{
+
+    from{
+        transform:translateY(-50%) translateX(0);
+    }
+
+    to{
+        transform:translateY(-50%) translateX(-1280px);
+    }
+
+}
+
+
+.room{
+    position:absolute;
+    inset:0;
+    display:none;
+}
+
+.room.active-room{
+    display:block;
+}
+
+.room-bg{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* PLAYER */
+
+#player{
+    position:absolute;
+    width:150px;
+    height:200px;
+    left:120px;
+    top:500px;
+    z-index:9999;
+    object-fit:contain;
+    image-rendering:pixelated;
+}
+
+.flip{
+    transform:scaleX(-1);
+}
+
+/* OBJECT */
+
+.enemy{
+    position:absolute;
+    width:90px;
+    image-rendering:pixelated;
+}
+
+.door{
+    position:absolute;
+    width:90px;
+    image-rendering:pixelated;
+}
+
+.weapon,
+.throw-item,
+.radio,
+.key{
+    position:absolute;
+    width:50px;
+    image-rendering:pixelated;
+}
+
+.locker{
+    position:absolute;
+    width:100px;
+    image-rendering:pixelated;
+}
+
+/* UI */
+
+.objective{
+    position:fixed;
+
+    top:20px;
+    left:20px;
+
+    z-index:9999;
+
+    color:#00f0ff;
+
+    font-size:13px;
+    letter-spacing:3px;
+}
+
+.inventory{
+    position:fixed;
+
+    top:20px;
+    right:20px;
+
+    z-index:9999;
+
+    padding:10px 14px;
+
+    border:1px solid rgba(0,255,255,.3);
+
+    background:rgba(0,0,0,.45);
+
+    font-size:11px;
+}
+
+.interaction{
+    position:fixed;
+
+    left:50%;
+    bottom:30px;
+
+    transform:translateX(-50%);
+
+    padding:10px 18px;
+
+    border:1px solid rgba(0,255,255,.3);
+
+    background:rgba(0,0,0,.55);
+
+    opacity:0;
+
+    transition:.2s;
+
+    z-index:9999;
+}
+
+
+.ending-container{
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+}
+.ending-text{
+    font-size:72px;
+    letter-spacing:10px;
+
+    text-shadow:0 0 20px rgba(0,255,255,.2);
+
+    position:relative;
+    left:3750px;
+}
+
+.ending-sub{
+    position:relative;
+    left:3750px;
+}
+#endingScreen{
+    background:#000;
+    z-index:99999999;
+}
+    
+#terminalPopup{
+
+position:fixed;
+inset:0;
+
+display:none;
+
+align-items:center;
+justify-content:center;
+
+background:rgba(0,0,0,.75);
+
+z-index:999999;
+
+}
+
+.terminal-box{
+
+width:700px;
+height:400px;
+
+background:#081018;
+
+border:2px solid #00f0ff;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+gap:25px;
+
+box-shadow:
+0 0 40px rgba(0,255,255,.4);
+
+}
+
+.terminal-title{
+
+font-size:28px;
+letter-spacing:4px;
+
+color:#00f0ff;
+
+}
+
+#questionText{
+
+font-size:26px;
+
+color:white;
+
+}
+
+#answerInput{
+
+width:300px;
+
+padding:12px;
+
+font-size:22px;
+
+text-align:center;
+
+background:black;
+
+border:1px solid #00f0ff;
+
+color:#00f0ff;
+
+}
+
+#submitAnswer{
+
+padding:12px 25px;
+
+background:#00f0ff;
+
+border:none;
+
+cursor:pointer;
+
+font-family:'Orbitron',sans-serif;
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+<div class="overlay"></div>
+
+
+
+<section class="screen active" id="openingScreen">
+
+<div class="opening-container">
+
+<div class="left-panel">
+
+<div class="game-title">
+LOST TAILS:
+</div>
+
+<div class="subtitle">
+FIRST CONTACT
+</div>
+
+<ul class="menu">
+
+<li onclick="startGame()">
+NEW GAME
+</li>
+
+<li>CONTINUE</li>
+<li>LOAD GAME</li>
+<li>OPTIONS</li>
+<li>EXIT</li>
+
+</ul>
+
+</div>
+
+<div class="lab">
+
+<div class="tube"></div>
+<div class="monitor"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CHARACTER -->
+
+<section class="screen" id="characterScreen">
+
+<div class="character-screen">
+
+<div class="char-top">
+
+<div class="char-title">
+SELECT UNIT
+</div>
+
+<div class="char-sub">
+CHOOSE YOUR CHARACTER
+</div>
+
+</div>
+
+<div class="character-grid">
+
+<div class="card">
+
+<img src="kucinghoshiitp.gif"
+class="character-image">
+
+<div class="fade"></div>
+
+<div class="info">
+
+<div class="name">KANEHOSHII</div>
+
+<div class="role">
+MONETARY UNIT
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>POWER</span>
+<span>85%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:85%"></div>
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>SPEED</span>
+<span>90%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:90%"></div>
+</div>
+
+</div>
+
+<button class="select-btn"
+onclick="selectCharacter('kucinghoshiitp.gif')">
+
+SELECT
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<img src="daemiew (1).gif"
+class="character-image">
+
+<div class="fade"></div>
+
+<div class="info">
+
+<div class="name">DAEM</div>
+
+<div class="role">
+COLD UNIT
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>POWER</span>
+<span>80%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:80%"></div>
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>SPEED</span>
+<span>98%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:98%"></div>
+</div>
+
+</div>
+
+<button class="select-btn"
+onclick="selectCharacter('daemiew (1).gif')">
+
+SELECT
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<img src="nekomiaw.gif"
+class="character-image">
+
+<div class="fade"></div>
+
+<div class="info">
+
+<div class="name">NEKOMACHI</div>
+
+<div class="role">
+AWARE UNIT
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>POWER</span>
+<span>90%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:90%"></div>
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>SPEED</span>
+<span>84%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:84%"></div>
+</div>
+
+</div>
+
+<button class="select-btn"
+onclick="selectCharacter('nekomiaw.gif')">
+
+SELECT
+
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<img src="reymiawd.gif"
+class="character-image">
+
+<div class="fade"></div>
+
+<div class="info">
+
+<div class="name">BLANC</div>
+
+<div class="role">
+DULCET UNIT
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>POWER</span>
+<span>99%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:99%"></div>
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="stat-top">
+<span>SPEED</span>
+<span>95%</span>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:95%"></div>
+</div>
+
+</div>
+
+<button class="select-btn"
+onclick="selectCharacter('reymiawd.gif')">
+
+SELECT
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="screen" id="loadingScreen">
+
+<div class="loading-container">
+
+<img src="iku.gif"
+class="loading-spinner">
+
+</div>
+
+</section>
+
+
+<section class="screen" id="gameScreen">
+<div class="vignette"></div>
+    <img src="glitch-kyle.jpeg"
+id="glitchOverlay"
+style="
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+display:none;
+pointer-events:none;
+z-index:999999;
+">
+<div class="objective" id="objectiveText">
+FIND THE KEY
+</div>
+
+<div class="inventory" id="inventoryUI">
+ITEM : NONE
+</div>
+
+<div class="interaction" id="interactionText">
+PRESS E
+</div>
+
+<div id="world">
+    <div class="corridor-wrapper">
+
+<img src="corid.png" class="corridor-bg">
+
+</div>
+
+<img src="kucinghoshii.gif" id="player">
+    <img src="monitor.png" id="monitor1"
+style="position:absolute;left:1200px;top:300px;width:120px;z-index:100;">
+
+<img src="monitor.png" id="monitor2"
+style="position:absolute;left:2800px;top:300px;width:120px;z-index:100;">
+
+<img src="monitor.png" id="monitor3"
+style="position:absolute;left:4300px;top:300px;width:120px;z-index:100;">
+
+<img src="door-lab.png" id="finalDoor"
+style="position:absolute;left:4800px;top:335px;width:180px;z-index:100;">
+<img src="id-card.png"
+id="finalCard"
+style="
+position:absolute;
+left:4550px;
+top:500px;
+width:60px;
+display:none;
+z-index:200;
+">
+</div>
+
+</section>
+   <section class="screen" id="endingScreen">
+
+<div class="ending-container">
+
+<div class="ending-text">
+10.12.2026
+</div>
+
+<div class="ending-sub">
+FIRST CONTACT
+</div>
+
+</div>
+
+</section>
+
+
+<section>
+<div id="terminalPopup">
+
+<div class="terminal-box">
+
+<div class="terminal-title">
+GRAVT TERMINAL
+</div>
+
+<div id="questionText">
+QUESTION
+</div>
+
+<input
+type="text"
+id="answerInput">
+
+<button id="submitAnswer">
+SUBMIT
+</button>
+
+</div>
+
+</div>
+    </section>
+<script>
+
+let player =
+document.getElementById("player");
+
+let playerX = 120;
+let playerY = 383;
+
+let speed = 3;
+let currentMonitor = null;
+let hasFinalKey = false;
+let hasCard = false;
+let terminalOpen = false;
+let keys = {};
+
+
+function startGame(){
+
+document
+.getElementById("openingScreen")
+.classList.remove("active");
+
+document
+.getElementById("characterScreen")
+.classList.add("active");
+
+}
+
+
+function selectCharacter(asset){
+
+player.src = asset;
+
+document
+.getElementById("characterScreen")
+.classList.remove("active");
+
+document
+.getElementById("loadingScreen")
+.classList.add("active");
+
+setTimeout(()=>{
+
+document
+.getElementById("loadingScreen")
+.classList.remove("active");
+
+document
+.getElementById("gameScreen")
+.classList.add("active");
+
+},2500);
+
+}
+
+/* KEYS */
+
+document.addEventListener("keydown",(e)=>{
+
+keys[e.key.toLowerCase()] = true;
+
+});
+
+document.addEventListener("keyup",(e)=>{
+
+keys[e.key.toLowerCase()] = false;
+
+});
+
+console.log("GAME LOOP START");
+function gameLoop(){
+    if(terminalOpen){
+        requestAnimationFrame(gameLoop);
+        return;
+    }
+
+
+    /* A */
+    if(keys["a"]){
+        playerX -= speed;
+        player.classList.add("flip");
+    }
+
+    /* D */
+    if(keys["d"]){
+        playerX += speed;
+        player.classList.remove("flip");
+    }
+
+   
+    if(keys["w"]){
+        playerY -= speed;
+    }
+
+   
+    if(keys["s"]){
+        playerY += speed;
+    }
+
+    
+    if(playerX < 0) playerX = 0;
+   if(playerX > 4860)
+    playerX = 4860;
+    if(playerY < 0) playerY = 0;
+    if(playerY > window.innerHeight - 120)
+        playerY = window.innerHeight - 120;
+    
+player.style.left = playerX + "px";
+player.style.top = playerY + "px";
+
+window.scrollTo(
+    playerX - window.innerWidth / 2 + 100,
+    0
+);
+    let interaction =
+document.getElementById("interactionText");
+
+currentMonitor = null;
+    if(solved1){
+document.getElementById("monitor1").style.filter =
+"drop-shadow(0 0 12px lime)";
+}
+
+if(solved2){
+document.getElementById("monitor2").style.filter =
+"drop-shadow(0 0 12px lime)";
+}
+
+if(solved3){
+document.getElementById("monitor3").style.filter =
+"drop-shadow(0 0 12px lime)";
+}
+
+if(Math.abs(playerX - 1200) < 150){
+
+    interaction.style.opacity = "1";
+    interaction.innerText =
+    "PRESS E TO USE TERMINAL";
+
+    currentMonitor = 1;
+}
+else if(Math.abs(playerX - 2800) < 150){
+
+    interaction.style.opacity = "1";
+    interaction.innerText =
+    "PRESS E TO USE TERMINAL";
+
+    currentMonitor = 2;
+}
+else if(Math.abs(playerX - 4300) < 150){
+
+    interaction.style.opacity = "1";
+    interaction.innerText =
+    "PRESS E TO USE TERMINAL";
+
+    currentMonitor = 3;
+}
+else if(
+    hasCard &&
+    Math.abs(playerX - 4800) < 150
+){
+
+    interaction.style.opacity = "1";
+    interaction.innerText =
+    "PRESS E TO OPEN DOOR";
+
+    currentMonitor = 99;
+}
+else{
+
+    interaction.style.opacity = "0";
+}
+let card =
+document.getElementById("finalCard");
+
+if(
+card &&
+card.style.display !== "none" &&
+!hasCard &&
+Math.abs(playerX - 4550) < 120
+){
+
+interaction.style.opacity = "1";
+
+interaction.innerText =
+"PRESS E TO TAKE CARD";
+
+currentMonitor = 777;
+
+}
+    requestAnimationFrame(gameLoop);
+}
+
+let activeQuestion = 0;
+
+let solved1 = false;
+let solved2 = false;
+let solved3 = false;
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key.toLowerCase() !== "e")
+return;
+
+if(currentMonitor === 1){
+    openTerminal(1);
+}
+
+else if(currentMonitor === 2){
+    openTerminal(2);
+}
+
+else if(currentMonitor === 3){
+    openTerminal(3);
+}
+
+else if(currentMonitor === 777){
+
+hasCard = true;
+
+document
+.getElementById("finalCard")
+.style.display = "none";
+
+document
+.getElementById("inventoryUI")
+.innerText =
+"ITEM : ACCESS CARD";
+
+document
+.getElementById("objectiveText")
+.innerText =
+"OPEN THE LAB DOOR";
+
+}
+else if(
+    currentMonitor === 99 &&
+    hasCard
+){
+
+window.scrollTo(0,0);
+
+document
+.getElementById("gameScreen")
+.classList.remove("active");
+
+document
+.getElementById("endingScreen")
+.classList.add("active");
+
+}
+
+});
+
+function openTerminal(number){
+
+terminalOpen = true;
+activeQuestion = number;
+
+document
+.getElementById("terminalPopup")
+.style.display = "flex";
+
+if(number === 1){
+
+document
+.getElementById("questionText")
+.innerText =
+"12x8";
+
+}
+
+else if(number === 2){
+
+document
+.getElementById("questionText")
+.innerText =
+"√83";
+
+}
+
+else if(number === 3){
+
+document
+.getElementById("questionText")
+.innerText =
+"√3312400 x e^-ln(130)";
+
+}
+
+}
+function checkAnswer(){
+
+let answer =
+document.getElementById("answerInput")
+.value
+.trim();
+
+if(
+activeQuestion === 1 &&
+answer === "96"
+){
+
+solved1 = true;
+
+alert(
+`LOG ENTRY 01
+Dear stardews,
+
+I looked up at the stars last night and thought of you.
+Up there, past the clouds and the atmosphere, is a vast, quiet blackness they call outer space.
+Out there, there are no laws, no pinkertons, and no civilizations trying to tame the wild.
+Just infinite freedom, cold and silent. 
+
+Sometimes I wish we could ride a horse right off this earth and into that quiet void, far away from the mess of this world and the choices catching up to us. It is a beautiful, terrifying thought a frontier that never ends.
+
+Keep your eyes on the horizon, Stardews. 
+
+Yours,
+Twotales `
+);
+
+}
+
+else if(
+activeQuestion === 2 &&
+answer === "9.1"
+){
+
+solved2 = true;
+
+alert(
+`LOG ENTRY 02
+the world can whisper, but we'll keep on flying
+you have me now, and i'll be right by your side`
+);
+
+}
+
+else if(
+activeQuestion === 3 &&
+answer === "14"
+){
+
+solved3 = true;
+
+terminalOpen = false;
+
+document.getElementById("terminalPopup")
+.style.display = "none";
+
+document.getElementById("answerInput")
+.value = "";
+
+document.getElementById("glitchOverlay")
+.style.display = "block";
+
+document.getElementById("glitchSound")
+.play();
+
+setTimeout(()=>{
+
+document.getElementById("morseSound")
+.play();
+
+},1000);
+
+setTimeout(()=>{
+
+alert(
+`... .--. .- -.-. .
+
+... .--. .- -.-. .
+
+... .--. .- -.-. .`
+);
+
+},3000);
+
+setTimeout(()=>{
+
+document.getElementById("glitchOverlay")
+.style.display = "none";
+
+document.getElementById("finalCard")
+.style.display = "block";
+
+hasFinalKey = true;
+
+document.getElementById("objectiveText")
+.innerText =
+"RECOVER THE ACCESS CARD";
+
+},7000);
+
+return;
+
+}
+
+else{
+
+alert(
+`ACCESS DENIED
+
+INVALID INPUT`
+);
+
+}
+
+terminalOpen = false;
+
+document.getElementById("terminalPopup")
+.style.display = "none";
+
+document.getElementById("answerInput")
+.value = "";
+
+}
+document
+.getElementById("submitAnswer")
+.addEventListener(
+"click",
+checkAnswer
+);
+
+gameLoop();
+</script>
+<audio id="glitchSound" src="glitchh.mpeg"></audio>
+
+<audio id="morseSound" src="morse-gravt.aac"></audio>
+</body>
+</html>
